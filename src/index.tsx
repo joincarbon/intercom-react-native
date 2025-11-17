@@ -53,6 +53,7 @@ export const IntercomEvents = {
     IntercomEventEmitter.UNREAD_COUNT_CHANGE_NOTIFICATION,
   IntercomWindowDidHide: IntercomEventEmitter.WINDOW_DID_HIDE_NOTIFICATION,
   IntercomWindowDidShow: IntercomEventEmitter.WINDOW_DID_SHOW_NOTIFICATION,
+  IntercomMessageSent: IntercomEventEmitter.MESSAGE_SENT_NOTIFICATION,
   IntercomHelpCenterWindowDidShow:
     IntercomEventEmitter.WINDOW_DID_SHOW_NOTIFICATION,
   IntercomHelpCenterWindowDidHide:
