@@ -1223,6 +1223,7 @@ useEffect(() => {
 | IntercomUnreadConversationCountDidChangeNotification | iOS, Android |
 | IntercomHelpCenterDidShowNotification                | iOS          |
 | IntercomHelpCenterDidHideNotification                | iOS          |
+| IntercomDidStartNewConversationNotification          | iOS          |
 | IntercomWindowDidShowNotification                    | iOS          |
 | IntercomWindowDidHideNotification                    | iOS          |
 

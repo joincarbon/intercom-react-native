@@ -13,13 +13,15 @@ RCT_EXPORT_MODULE();
 - (NSDictionary<NSString *, NSString *> *)constantsToExport {
     return @{@"UNREAD_COUNT_CHANGE_NOTIFICATION": IntercomUnreadConversationCountDidChangeNotification,
             @"WINDOW_DID_HIDE_NOTIFICATION": IntercomWindowDidHideNotification,
-            @"WINDOW_DID_SHOW_NOTIFICATION": IntercomWindowDidShowNotification
+            @"WINDOW_DID_SHOW_NOTIFICATION": IntercomWindowDidShowNotification,
+            @"MESSAGE_SENT_NOTIFICATION": @"IntercomDidStartNewConversationNotification"
     };
 }
 
 - (NSArray<NSString *> *)supportedEvents {
     return @[IntercomUnreadConversationCountDidChangeNotification,
-            IntercomWindowDidHideNotification, IntercomWindowDidShowNotification];
+            IntercomWindowDidHideNotification, IntercomWindowDidShowNotification,
+            @"IntercomDidStartNewConversationNotification"];
 }
 
 - (void)handleUpdateUnreadCount:(NSNotification *)notification {
@@ -36,11 +38,22 @@ RCT_EXPORT_MODULE();
     [self sendEventWithName:IntercomWindowDidShowNotification body:@{@"visible": @YES}];
 }
 
+- (void)handleMessageSentNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *conversationId = userInfo[@"conversation_id"];
+    NSMutableDictionary *payload = [NSMutableDictionary dictionary];
+    if (conversationId != nil) {
+        payload[@"conversationId"] = conversationId;
+    }
+    [self sendEventWithName:@"IntercomDidStartNewConversationNotification" body:payload];
+}
+
 // Will be called when this module's first listener is added.
 - (void)startObserving {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleUpdateUnreadCount:) name:IntercomUnreadConversationCountDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWindowDidHideNotification:) name:IntercomWindowDidHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWindowShowHideNotification:) name:IntercomWindowDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMessageSentNotification:) name:@"IntercomDidStartNewConversationNotification" object:nil];
 }
 
 // Will be called when this module's last listener is removed, or on dealloc.
